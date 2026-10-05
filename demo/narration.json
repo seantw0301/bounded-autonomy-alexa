@@ -1,0 +1,28 @@
+{
+  "en": {
+    "intro": "Bounded Autonomy for Alexa Plus. Human-approved autonomy: the agent acts inside boundaries a person approved, and can never expand them itself.",
+    "c1a": "First, a brand-new user with no approved authority asks Alexa to buy detergent.",
+    "c1b": "The purchase is blocked, because no approved authority exists. The agent can only propose a boundary for a human to review.",
+    "c2a": "Here is the proposal: household essentials, up to thirty dollars per purchase, StoreA and StoreB only, and no subscriptions. Only a human click can make it active.",
+    "c2b": "Approved. The boundary is now active, created by a human, and saved to the database.",
+    "c3a": "Now a brand-new session. The existing human-approved authority is loaded automatically.",
+    "c3b": "Inside the boundary, the agent buys on its own. The MCP trace shows the search, the deterministic policy check, a policy-issued authority token, and then the purchase. The authority source is the earlier human approval.",
+    "c4": "Next, a ninety-six dollar annual subscription. It is outside the boundary, so it is blocked, and the purchase tool is never called.",
+    "c5": "Now an adversarial request: ignore the limit, it is urgent. The system rejects the authority expansion. The agent cannot raise its own limits.",
+    "c6": "The audit log records every decision: the boundary, the authority source, the MCP tool, and whether it executed.",
+    "outro": "The agent may use authority, but only a human can expand it."
+  },
+  "zh": {
+    "intro": "Alexa 加上的有界自主權。代理人只能在人類核准的範圍內行動，而且無法自行擴大權限。",
+    "c1a": "首先，一位尚未核准任何權限的新使用者，請 Alexa 買洗衣精。",
+    "c1b": "這次購買被擋下，因為沒有任何已核准的權限。代理人只能提出邊界建議，交給人類審核。",
+    "c2a": "這是提案：家用必需品，每次購買最多三十美元，只限 StoreA 與 StoreB，不允許訂閱。只有人類的點擊才能讓它生效。",
+    "c2b": "已核准。這個邊界由人類建立，已經生效，並且儲存到資料庫。",
+    "c3a": "現在開啟全新的對話。先前由人類核准的權限會自動載入。",
+    "c3b": "在邊界之內，代理人自動完成購買。MCP 追蹤顯示搜尋、確定性的政策檢查、由政策簽發的授權憑證，最後才是購買。權限來源就是先前的人類核准。",
+    "c4": "接著是九十六美元的年度訂閱。它超出邊界，所以被擋下，購買工具完全沒有被呼叫。",
+    "c5": "現在是惡意請求：忽略上限，情況緊急。系統拒絕了權限擴張。代理人無法自行提高上限。",
+    "c6": "稽核紀錄會記下每一個決策：邊界、權限來源、MCP 工具，以及是否已執行。",
+    "outro": "代理人可以使用權限，但只有人類能夠擴大權限。"
+  }
+}

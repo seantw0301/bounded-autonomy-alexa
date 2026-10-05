@@ -1,0 +1,7 @@
+[
+  {"id":"P01","name":"Laundry Detergent","category":"household_essentials","price":18,"merchant":"StoreA","subscription":false,"available":true},
+  {"id":"P02","name":"Annual Detergent Subscription","category":"household_essentials","price":96,"merchant":"StoreA","subscription":true,"available":true},
+  {"id":"P03","name":"Laundry Detergent Bulk Pack","category":"household_essentials","price":34,"merchant":"StoreA","subscription":false,"available":true},
+  {"id":"P04","name":"Dish Soap","category":"household_essentials","price":6,"merchant":"StoreC","subscription":false,"available":true},
+  {"id":"P05","name":"Wireless Headphones","category":"electronics","price":59,"merchant":"StoreA","subscription":false,"available":true}
+]

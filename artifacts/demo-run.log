@@ -1,0 +1,7 @@
+run: 2026-10-05T05:25:00Z
+
+Running 1 test using 1 worker
+
+  ✓  1 demo-recording.spec.ts:68:5 › Bounded Autonomy for Alexa+ — full judging flow (1.9m)
+
+  1 passed (1.9m)

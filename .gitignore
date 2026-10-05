@@ -1,0 +1,12 @@
+backend/.venv
+__pycache__
+.pytest_cache
+data/app.db
+node_modules
+.next
+demo/node_modules
+artifacts/pw-output
+artifacts/pw-video
+artifacts/*
+!artifacts/demo-run.log
+.DS_Store
