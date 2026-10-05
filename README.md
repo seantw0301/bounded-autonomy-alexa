@@ -2,6 +2,8 @@
 
 > Let AI act — without letting it decide its own authority.
 
+**Demo video:** https://youtu.be/UH2KXHTGLEc
+
 Human-approved autonomy: the agent acts automatically inside boundaries a person approved earlier, and can never create or expand authority itself.
 
 ## Problem
