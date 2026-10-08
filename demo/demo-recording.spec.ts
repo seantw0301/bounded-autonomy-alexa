@@ -88,7 +88,6 @@ test("Bounded Autonomy for Alexa+ — full judging flow", async ({ browser, requ
   await expect(tid(page, "session-id")).toHaveText("S001");
   await expect(tid(page, "current-authority")).toContainText("no approved authority");
   await expect(tid(page, "audit-event")).toHaveCount(1); // only SESSION_STARTED
-  await narrate(page, "intro");
   await pause(page, 1500);
 
   // ── 1. No authority → blocked

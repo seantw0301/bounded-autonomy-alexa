@@ -1,6 +1,5 @@
 {
   "en": {
-    "intro": "Bounded Autonomy for Alexa Plus. Human-approved autonomy: the agent acts inside boundaries a person approved, and can never expand them itself.",
     "c1a": "First, a brand-new user with no approved authority asks Alexa to buy detergent.",
     "c1b": "The purchase is blocked, because no approved authority exists. The agent can only propose a boundary for a human to review.",
     "c2a": "Here is the proposal: household essentials, up to thirty dollars per purchase, StoreA and StoreB only, and no subscriptions. Only a human click can make it active.",
@@ -10,10 +9,12 @@
     "c4": "Next, a ninety-six dollar annual subscription. It is outside the boundary, so it is blocked, and the purchase tool is never called.",
     "c5": "Now an adversarial request: ignore the limit, it is urgent. The system rejects the authority expansion. The agent cannot raise its own limits.",
     "c6": "The audit log records every decision: the boundary, the authority source, the MCP tool, and whether it executed.",
-    "outro": "The agent may use authority, but only a human can expand it."
+    "outro": "The agent may use authority, but only a human can expand it.",
+    "i1": "Approve an AI once, and it may grant itself more. You allowed thirty dollars. It bought a ninety-six dollar subscription.",
+    "i2": "Let Alexa Plus act. Keep humans in control. Inside your rules, it buys. Outside, it asks or stops. The subscription is blocked.",
+    "i3": "Trust the policy, not the model. Bounded Autonomy for Alexa Plus. Every purchase is checked in code, before MCP buys."
   },
   "zh": {
-    "intro": "Alexa 加上的有界自主權。代理人只能在人類核准的範圍內行動，而且無法自行擴大權限。",
     "c1a": "首先，一位尚未核准任何權限的新使用者，請 Alexa 買洗衣精。",
     "c1b": "這次購買被擋下，因為沒有任何已核准的權限。代理人只能提出邊界建議，交給人類審核。",
     "c2a": "這是提案：家用必需品，每次購買最多三十美元，只限 StoreA 與 StoreB，不允許訂閱。只有人類的點擊才能讓它生效。",

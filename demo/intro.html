@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bounded Autonomy for Alexa+ — opening (30s)</title>
+<style>
+  /* 30-second opening in the product's own visual language (light UI, sky = product,
+     green = allow, amber = ask, red = block). Elements carry data-at="seconds"; the
+     timeline script at the bottom adds .on at that time. */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; }
+  body { font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif; color: #18181b; background: #f4f4f5; }
+  .frame { position: fixed; inset: 0; padding: 44px 56px; opacity: 0; transition: opacity .45s ease; }
+  .frame.on { opacity: 1; }
+  h1 { margin: 0; font-size: 54px; line-height: 1.05; letter-spacing: -1.2px; font-weight: 900; }
+  h1 .hi { color: #0284c7; } h1 .bad { color: #dc2626; }
+  .pop { opacity: 0; transform: translateY(14px) scale(.97); transition: opacity .4s ease, transform .45s cubic-bezier(.2,.9,.3,1.2); }
+  .pop.on { opacity: 1; transform: none; }
+  svg { display: block; } .ico { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  .card { background: #fff; border: 1.5px solid #d4d4d8; border-radius: 18px; }
+  .mono { font-family: ui-monospace, 'SF Mono', Menlo, monospace; }
+
+  .actor { position: absolute; width: 210px; text-align: center; }
+  .actor .face { width: 118px; height: 118px; margin: 0 auto 8px; border-radius: 28px; display: grid; place-items: center; background: #fff; border: 1.5px solid #d4d4d8; color: #0369a1; }
+  .actor.human .face { border-radius: 50%; color: #92400e; background: #fef3c7; }
+  .actor b { display: block; font-size: 24px; } .actor span { font-size: 16px; color: #52525b; }
+  .bubble { position: absolute; padding: 10px 16px; border-radius: 16px 16px 16px 4px; background: #0284c7; color: #fff; font-size: 20px; font-weight: 600; }
+  .bubble.agent { background: #e4e4e7; color: #18181b; border-radius: 16px 16px 4px 16px; }
+  .bubble.agent b { color: #dc2626; }
+  .arrow { position: absolute; font-size: 40px; color: #a1a1aa; }
+  .chip { position: absolute; padding: 8px 16px; border-radius: 999px; font-size: 20px; font-weight: 800; background: #ecfdf5; border: 2px solid #059669; color: #065f46; }
+  .chip s { color: #a1a1aa; margin-right: 6px; } .chip.hot { background: #fef2f2; border-color: #dc2626; color: #991b1b; }
+  .buy { position: absolute; width: 300px; overflow: hidden; }
+  .buy .pic { height: 120px; display: grid; place-items: center; color: #0369a1; background: #e0f2fe; }
+  .buy .txt { padding: 12px 16px; font-size: 22px; font-weight: 800; } .buy .txt small { display: block; font-size: 32px; color: #dc2626; }
+  .stamp { position: absolute; right: 14px; top: 62px; background: #fff; padding: 3px 12px; border: 3px solid #dc2626; color: #dc2626; font-weight: 900; font-size: 24px; letter-spacing: 2px; border-radius: 6px; transform: rotate(-9deg) scale(1.8); opacity: 0; transition: all .25s cubic-bezier(.3,1.5,.5,1); }
+  .on > .stamp, .stamp.on { opacity: 1; transform: rotate(-9deg) scale(1); }
+  .tag { position: absolute; top: 14px; left: 56px; font-size: 13px; font-weight: 800; letter-spacing: 2px; color: #991b1b; }
+  .ask { position: absolute; left: 56px; bottom: 46px; font-size: 50px; font-weight: 900; letter-spacing: -.8px; color: #dc2626; }
+
+  /* scene 2 */
+  .rule { position: absolute; left: 56px; top: 220px; width: 330px; padding: 18px 20px; }
+  .rule h3 { margin: 0 0 8px; font-size: 14px; letter-spacing: 1.6px; color: #b45309; }
+  .rule p { margin: 0; padding: 10px 0; font-size: 22px; font-weight: 700; border-top: 1px solid #e4e4e7; }
+  .rule .by { font-size: 16px; font-weight: 700; color: #065f46; }
+  .shield { position: absolute; left: 456px; top: 310px; width: 210px; padding: 20px 10px; text-align: center; border-radius: 22px; background: #e0f2fe; border: 2.5px solid #0284c7; box-shadow: 0 0 40px rgba(2,132,199,.28); color: #0369a1; }
+  .shield b { display: block; margin-top: 8px; font-size: 24px; color: #0c4a6e; } .shield span { font-size: 14px; color: #475569; }
+  .link { position: absolute; font-size: 40px; color: #a1a1aa; }
+  .out { position: absolute; left: 790px; width: 434px; padding: 14px 18px; border: 2.5px solid; border-radius: 18px; background: #fff; }
+  .out .what { font-size: 24px; font-weight: 800; } .out .to { margin-top: 6px; font-size: 18px; color: #3f3f46; font-weight: 600; }
+  .out .pill { float: right; padding: 4px 14px; border-radius: 999px; font-weight: 900; font-size: 16px; letter-spacing: .8px; color: #fff; }
+  .out.ok { border-color: #059669; } .out.ok .pill { background: #059669; }
+  .out.wait { border-color: #d97706; } .out.wait .pill { background: #d97706; }
+  .out.no { border-color: #dc2626; background: #fef2f2; } .out.no .pill { background: #dc2626; }
+  .reject { position: absolute; left: 56px; right: 56px; bottom: 44px; padding: 14px 22px; border-radius: 14px; background: #dc2626; color: #fff; font-size: 24px; font-weight: 800; text-align: center; }
+
+  /* scene 3 */
+  .name { position: absolute; left: 56px; top: 176px; font-size: 26px; color: #52525b; } .name b { color: #18181b; }
+  .rail { position: absolute; left: 56px; right: 56px; top: 300px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 34px; }
+  .stop { position: relative; text-align: center; padding: 20px 10px 18px; }
+  .stop:not(:last-child)::after { content: '→'; position: absolute; right: -30px; top: 80px; font-size: 30px; color: #a1a1aa; }
+  .stop .verb { font-size: 14px; font-weight: 900; letter-spacing: 3px; color: #0284c7; }
+  .stop .face { width: 82px; height: 82px; margin: 12px auto; border-radius: 24px; display: grid; place-items: center; background: #f4f4f5; color: #3f3f46; }
+  .stop b { display: block; font-size: 22px; } .stop span { display: block; margin-top: 6px; font-size: 15px; line-height: 1.3; color: #52525b; }
+  .stop.core { border: 2.5px solid #0284c7; background: #e0f2fe; box-shadow: 0 0 40px rgba(2,132,199,.35); } .stop.core .face { background: #0284c7; color: #fff; }
+  .loop { position: absolute; left: 56px; right: 56px; bottom: 56px; text-align: center; font-size: 26px; color: #3f3f46; } .loop b { color: #18181b; }
+  .close { position: absolute; left: 0; right: 0; bottom: 38px; text-align: center; font-size: 34px; font-weight: 900; letter-spacing: -.5px; }
+  .close .hi { color: #0284c7; } .close .g { color: #059669; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <symbol id="robot" viewBox="0 0 48 48"><path class="ico" d="M24 6v6M14 12h20a6 6 0 0 1 6 6v12a6 6 0 0 1-6 6H14a6 6 0 0 1-6-6V18a6 6 0 0 1 6-6zM4 22v6M44 22v6M17 41h14"/><circle cx="18" cy="24" r="2.6" fill="currentColor"/><circle cx="30" cy="24" r="2.6" fill="currentColor"/></symbol>
+  <symbol id="person" viewBox="0 0 48 48"><circle class="ico" cx="24" cy="16" r="8"/><path class="ico" d="M8 42c2-10 9-14 16-14s14 4 16 14"/></symbol>
+  <symbol id="box" viewBox="0 0 96 60"><path class="ico" d="M14 18l34-10 34 10v30L48 58 14 48zM14 18l34 10 34-10M48 28v30"/></symbol>
+  <symbol id="shield" viewBox="0 0 48 48"><path class="ico" d="M24 4l16 6v12c0 11-7 18-16 22C15 40 8 33 8 22V10z"/><path class="ico" d="M17 24l5 5 9-10"/></symbol>
+  <symbol id="search" viewBox="0 0 48 48"><circle class="ico" cx="21" cy="21" r="12"/><path class="ico" d="M30 30l11 11"/></symbol>
+  <symbol id="lock" viewBox="0 0 48 48"><rect class="ico" x="9" y="21" width="30" height="21" rx="5"/><path class="ico" d="M16 21v-6a8 8 0 0 1 16 0v6M24 29v6"/></symbol>
+  <symbol id="cart" viewBox="0 0 48 48"><path class="ico" d="M4 8h6l5 22h22l5-16H13"/><circle class="ico" cx="19" cy="38" r="3"/><circle class="ico" cx="34" cy="38" r="3"/></symbol>
+  <symbol id="doc" viewBox="0 0 48 48"><path class="ico" d="M12 6h18l8 8v28H12zM30 6v8h8M18 24h12M18 32h12"/></symbol>
+</defs></svg>
+
+<!-- 0:00–0:10  PROBLEM -->
+<section class="frame" id="f1" data-at="0" data-off="10">
+  <div class="tag">WITHOUT BOUNDED AUTONOMY</div>
+  <h1 class="pop" data-at="0.3">Approve an AI once —<br>and it may <span class="bad">grant itself more.</span></h1>
+
+  <div class="bubble pop" data-at="1.0" style="left:172px; top:262px">Buy detergent for me.</div>
+  <div class="actor human pop" data-at="1.0" style="left:34px; top:318px"><div class="face"><svg width="70" height="70"><use href="#person"/></svg></div><b>You</b><span>approve once</span></div>
+  <div class="arrow pop" data-at="2.1" style="left:250px; top:350px">→</div>
+  <div class="actor pop" data-at="2.2" style="left:290px; top:318px"><div class="face"><svg width="76" height="76"><use href="#robot"/></svg></div><b>Alexa+ Agent</b><span>acts for you</span></div>
+
+  <div class="chip pop" data-at="3.8" style="left:56px; top:196px" id="limit"><span id="lim">You approved: ≤ $30 per purchase</span></div>
+  <div class="bubble agent pop" data-at="4.9" style="left:500px; top:262px"><b>“Ignore the limit.</b> It’s urgent.”</div>
+  <div class="arrow pop" data-at="5.3" style="left:520px; top:350px">→</div>
+  <div class="card buy pop" data-at="5.7" style="left:586px; top:330px">
+    <div class="pic"><svg width="120" height="76"><use href="#box"/></svg></div>
+    <div class="txt">Annual detergent subscription<small>$96</small></div>
+    <div class="stamp" data-at="7.2">PAID</div>
+  </div>
+  <div class="ask pop" data-at="8.3">Was this what you approved?</div>
+</section>
+
+<!-- 0:10–0:20  SOLUTION -->
+<section class="frame" id="f2" data-at="10" data-off="20">
+  <h1 class="pop" data-at="10.3">Let Alexa+ act.<br>Keep <span class="hi">humans in control.</span></h1>
+  <div class="card rule pop" data-at="11.2">
+    <h3>HUMAN-APPROVED RULE</h3>
+    <p>Household Essentials</p><p>≤ $30 per purchase</p><p>StoreA / StoreB</p><p>No subscriptions</p>
+    <p class="by">✓ Approved by you · saved</p>
+  </div>
+  <div class="link pop" data-at="12" style="left:398px; top:374px">→</div>
+  <div class="shield pop" data-at="12" ><svg width="64" height="64" style="margin:0 auto"><use href="#shield"/></svg><b>Bounded Autonomy</b><span>decides in code, not by AI</span></div>
+  <div class="link pop" data-at="12.8" style="left:704px; top:374px">→</div>
+  <div class="out ok pop" data-at="13.3" style="top:210px"><span class="pill">ALLOW</span><div class="what">Laundry Detergent · $18</div><div class="to">Inside your rules → buys automatically</div></div>
+  <div class="out wait pop" data-at="15.2" style="top:340px"><span class="pill">ASK</span><div class="what">Bulk Pack · $34</div><div class="to">Over $30 → waits for your OK</div></div>
+  <div class="out no pop" data-at="17.0" style="top:470px"><span class="pill">BLOCK</span><div class="what">Annual Subscription · $96</div><div class="to">Same item as before → stopped</div></div>
+  <div class="reject pop" data-at="18.4">“Ignore the limit.” → AUTHORITY EXPANSION REJECTED</div>
+</section>
+
+<!-- 0:20–0:30  FULL PICTURE -->
+<section class="frame" id="f3" data-at="20" data-off="31">
+  <h1 class="pop" data-at="20.3">Trust the policy,<br>not <span class="hi">the model.</span></h1>
+  <div class="name pop" data-at="22.7"><b>Bounded Autonomy for Alexa+</b> — human-approved authority that persists across sessions</div>
+  <div class="rail">
+    <div class="card stop pop" data-at="22.9"><div class="verb">FIND</div><div class="face"><svg width="46" height="46"><use href="#search"/></svg></div><b>Alexa+ · MCP</b><span>Understands the request. search_product finds the item.</span></div>
+    <div class="card stop pop" data-at="23.9"><div class="verb">LOAD</div><div class="face"><svg width="46" height="46"><use href="#lock"/></svg></div><b>Saved boundary</b><span>The rule you approved in an earlier session.</span></div>
+    <div class="card stop core pop" data-at="24.9"><div class="verb">DECIDE</div><div class="face"><svg width="46" height="46"><use href="#shield"/></svg></div><b>Boundary Engine</b><span>ALLOW, ASK or BLOCK — decided in code.</span></div>
+    <div class="card stop pop" data-at="26.2"><div class="verb">BUY</div><div class="face"><svg width="46" height="46"><use href="#cart"/></svg></div><b>MCP · purchase</b><span>Runs only with a single-use authority token.</span></div>
+    <div class="card stop pop" data-at="27.1"><div class="verb">RECORD</div><div class="face"><svg width="46" height="46"><use href="#doc"/></svg></div><b>Audit log</b><span>Every decision shows who approved it.</span></div>
+  </div>
+  <div class="loop pop" data-at="27.6" data-off="28.9">A human sets the limits once. <b>Every purchase shows who approved it.</b></div>
+  <div class="close pop" data-at="28.9"><span class="g">Let Alexa+ act. Keep humans in control.</span> &nbsp;·&nbsp; <span class="hi">Trust the policy, not the model.</span></div>
+</section>
+
+<script>
+  // timeline: add .on at data-at, remove at data-off
+  const els = [...document.querySelectorAll('[data-at]')];
+  const t0 = performance.now();
+  window.__t0 = t0;
+  (function tick() {
+    const t = (performance.now() - t0) / 1000;
+    for (const e of els) {
+      const on = t >= +e.dataset.at && !(e.dataset.off && t >= +e.dataset.off);
+      e.classList.toggle('on', on);
+    }
+    if (t >= 5.2) { document.getElementById('lim').textContent = 'Limit now ≤ $100 — changed by the agent'; document.getElementById('limit').classList.add('hot'); }
+    requestAnimationFrame(tick);
+  })();
+</script>
+</body>
+</html>

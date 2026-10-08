@@ -40,12 +40,14 @@ scripts/record-demo.sh
 - Trace shows `AUTH-xxxx` tokens: single-use, 60s TTL, demo data only
 - Level 2 items built for the demo: MCP trace panel, authority provenance, Why Alexa+ line, adversarial case. Not built: one-time ASK approval, scenario replay, friction log.
 
-## Voice narration (optional)
+## Opening + neural voice-over (final video)
 ```bash
-NARRATE=1 scripts/record-demo.sh                      # English (voice: Samantha)
-NARRATE=1 NARRATION_LANG=zh scripts/record-demo.sh    # Traditional Chinese (voice: Meijia)
+scripts/make-final-video.sh      # voice -> 30s opening -> narrated demo -> artifacts/bounded-autonomy-final.mp4
 ```
-- Output: `artifacts/bounded-autonomy-demo-narrated.webm` (silent `bounded-autonomy-demo.webm` is also kept)
-- Text: `demo/narration.json`; audio via macOS `say`; the spec records each line's start time and waits for it to finish, `scripts/narration.py mux` mixes the audio in
-- Needs system `ffmpeg` (with libopus). Change voice/speed: `NARRATION_VOICE`, `NARRATION_RATE`
-- The narrated run is ≈1:49 (pauses shortened, speech fills the time)
+- Opening: `demo/intro.html` (3 scenes: problem 0–10s, slogan + result 10–20s, tech flow 20–30s), recorded by `demo/record-intro.mjs`; follows the "first 30 seconds" rules (10/10/10, same cast, colors: green allow / amber ask / red block / blue product)
+- Voice: open neural TTS **Kokoro** (`af_heart`), runs locally, no cloud service. Needs a venv with `kokoro_onnx` + `model/` (set `KOKORO_ENV`; default `../IntentChain/video/tts-env`). Without it the pipeline falls back to macOS `say`
+- Text/timing: `demo/narration.json` (`i1`–`i3` = opening, others = demo); the demo spec waits for each line's real duration, so a voice change needs no edits
+- Pronunciation fixes (MCP, StoreA, Alexa+) live in `scripts/narration.py`
+- Output ≈ 2:11 (limit 3:00); mean loudness normalised to −16 LUFS
+- Opening only: `python3 scripts/narration.py prep && (cd demo && node record-intro.mjs)`
+- Chinese/macOS voice: `NARRATE=1 NARRATION_LANG=zh scripts/record-demo.sh` (no Chinese opening)
