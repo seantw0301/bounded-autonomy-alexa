@@ -39,4 +39,4 @@ One-time approvals · expiry/revocation · more domains · real auth · an MCP "
 
 ## Links
 - Repo: https://github.com/seantw0301/bounded-autonomy-alexa (MIT)
-- Video: _待新連結_
+- Video: https://www.youtube.com/watch?v=CAbtLyfUoFs

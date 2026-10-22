@@ -93,4 +93,4 @@ Python, FastAPI, SQLAlchemy, SQLite, MCP (Streamable HTTP), Next.js, TypeScript,
 
 ## Links
 - Repo: https://github.com/seantw0301/bounded-autonomy-alexa (MIT)
-- Video: https://youtu.be/UH2KXHTGLEc
+- Video: https://www.youtube.com/watch?v=CAbtLyfUoFs
